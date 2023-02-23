@@ -7,6 +7,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author nevinsunny
@@ -28,4 +29,5 @@ public class AccountDocument {
     private Integer account_id;
     private Integer limit;
     private List<String> products;
+    private UUID someUUID;
 }

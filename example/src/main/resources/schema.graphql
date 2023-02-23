@@ -20,6 +20,7 @@ type Employee {
 type Accounts {
   account_id: String
   id: ID
+  someUUID : String
   limit: String
   products: [String]
 }
@@ -35,6 +36,7 @@ type Address {
 input AccountsFilter {
    account_id: IntExpression
    limit: IntExpression
+   someUUID : StringExpression
 
    and: [AccountsFilter!]
    or: [AccountsFilter!]
@@ -72,6 +74,7 @@ input StringExpression {
    contains: String
    in: [String!]
 }
+
 
 # Define Int Expression
 input IntExpression {
