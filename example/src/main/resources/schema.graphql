@@ -4,7 +4,8 @@ scalar DateTime
 
 type Query {
    searchEmployees(filter: EmployeeFilter): [Employee!]
- }
+   searchAccounts(filter: AccountsFilter): [Accounts!]
+}
 
 # Define the types
 type Employee {
@@ -16,6 +17,13 @@ type Employee {
    address (filter: AddressFilter): [Address!]
 }
 
+type Accounts {
+  account_id: String
+  id: ID
+  limit: String
+  products: [String]
+}
+
 type Address {
    id: ID
    street : String!
@@ -23,6 +31,16 @@ type Address {
    state : String!
    zipCode : Int!
 }
+
+input AccountsFilter {
+   account_id: IntExpression
+   limit: IntExpression
+
+   and: [AccountsFilter!]
+   or: [AccountsFilter!]
+   not: AccountsFilter
+}
+
 
 # Define filter input
 input EmployeeFilter {

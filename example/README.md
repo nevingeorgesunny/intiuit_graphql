@@ -1,8 +1,10 @@
 # Graphql Filter Demo With JPA Specification
 
-This examples demonstrates the usage of graphql-filter-java library for transforming the input filter expression supplied with a graphql query into JPA Specification criteria for any SQL database.
-By using the filter library, developers can skip the complexity of parsing and transforming the input filter expression into desired format by just few lines of code as shown below:
- 
+This examples demonstrates the usage of graphql-filter-java library for transforming the input filter expression
+supplied with a graphql query into JPA Specification criteria for any SQL database.
+By using the filter library, developers can skip the complexity of parsing and transforming the input filter expression
+into desired format by just few lines of code as shown below:
+
 #### GraphQL Schema
 
 ```
@@ -82,56 +84,112 @@ input DateTimeExpression {
 }
 
 ```
+
 #### Filter Dependency
+
 ```xml
+
 <dependency>
-  <groupId>com.intuit.idg.graphql</groupId>
-  <artifactId>graphql-filter-java</artifactId>
-  <version>1.0-SNAPSHOT</version>
+    <groupId>com.intuit.idg.graphql</groupId>
+    <artifactId>graphql-filter-java</artifactId>
+    <version>1.0-SNAPSHOT</version>
 </dependency>
 ```
 
 #### Database Setup
-##### Database schema
-```sql
-create table if not exists employee(
-  id varchar(255) not null,
-  firstName varchar(255),
-  lastName varchar (255),
-  birthDate timestamp NULL DEFAULT NULL,
-  age int,
-  primary key (id),
-);
 
-create table if not exists address(
-  id varchar(255) not null,
-  employee_id varchar (255),
-  street varchar(255),
-  city varchar (255),
-  state varchar (255),
-  zipCode int,
-  primary key (idList),
-  CONSTRAINT employee_id_fkey FOREIGN KEY (employee_id) REFERENCES employee (id));
+##### Database schema
+
+```sql
+create table if not exists employee
+(
+    id varchar
+(
+    255
+) not null,
+    firstName varchar
+(
+    255
+),
+    lastName varchar
+(
+    255
+),
+    birthDate timestamp NULL DEFAULT NULL,
+    age int,
+    primary key
+(
+    id
+),
+    );
+
+create table if not exists address
+(
+    id varchar
+(
+    255
+) not null,
+    employee_id varchar
+(
+    255
+),
+    street varchar
+(
+    255
+),
+    city varchar
+(
+    255
+),
+    state varchar
+(
+    255
+),
+    zipCode int,
+    primary key
+(
+    idList
+),
+    CONSTRAINT employee_id_fkey FOREIGN KEY
+(
+    employee_id
+) REFERENCES employee
+(
+    id
+));
 );
 
 -- Insert data into employee table.
-insert into employee (id, first_name, last_name, birth_date, age) values ('1', 'Tom', 'Hanks', '1982-07-10', 38);
-insert into employee (id, first_name, last_name, birth_date, age) values ('2', 'Johnny', 'Depp', '1970-06-04', 50);
-insert into employee (id, first_name, last_name, birth_date, age) values ('3', 'Tom', 'Cruise', '1980-06-04', 40);
-insert into employee (id, first_name, last_name, birth_date, age) values ('4', 'Will', 'Smith', '1968-06-04', 52);
-insert into employee (id, first_name, last_name, birth_date, age) values ('5', 'Jack', 'Smith', '1995-06-04', 25);
+insert into employee (id, first_name, last_name, birth_date, age)
+values ('1', 'Tom', 'Hanks', '1982-07-10', 38);
+insert into employee (id, first_name, last_name, birth_date, age)
+values ('2', 'Johnny', 'Depp', '1970-06-04', 50);
+insert into employee (id, first_name, last_name, birth_date, age)
+values ('3', 'Tom', 'Cruise', '1980-06-04', 40);
+insert into employee (id, first_name, last_name, birth_date, age)
+values ('4', 'Will', 'Smith', '1968-06-04', 52);
+insert into employee (id, first_name, last_name, birth_date, age)
+values ('5', 'Jack', 'Smith', '1995-06-04', 25);
 
 -- Insert data into address table.
-insert into address (id, employee_id, street, city, state, zip_code) values ('1', '1', '3000 Abs St', 'Newark','CA', 94560);
-insert into address (id, employee_id, street, city, state, zip_code) values ('2', '2', '400 Xyz Way', 'Sunnyvale','CA', 94087);
-insert into address (id, employee_id, street, city, state, zip_code) values ('3', '1', '400 Xyz Way', 'Sunnyvale','CA', 94087);
-insert into address (id, employee_id, street, city, state, zip_code) values ('4', '3', '100 Pqr Way', 'Fremont','CA', 94050);
-insert into address (id, employee_id, street, city, state, zip_code) values ('5', '4', '456 Pqr Blvd', 'Fremont','CA', 94566);
+insert into address (id, employee_id, street, city, state, zip_code)
+values ('1', '1', '3000 Abs St', 'Newark', 'CA', 94560);
+insert into address (id, employee_id, street, city, state, zip_code)
+values ('2', '2', '400 Xyz Way', 'Sunnyvale', 'CA', 94087);
+insert into address (id, employee_id, street, city, state, zip_code)
+values ('3', '1', '400 Xyz Way', 'Sunnyvale', 'CA', 94087);
+insert into address (id, employee_id, street, city, state, zip_code)
+values ('4', '3', '100 Pqr Way', 'Fremont', 'CA', 94050);
+insert into address (id, employee_id, street, city, state, zip_code)
+values ('5', '4', '456 Pqr Blvd', 'Fremont', 'CA', 94566);
 ```
 
 ##### EmployeeEntity.java
+
 ```java
 package com.intuit.graphql.demo.persistence.entity;
+
+import com.intuit.graphql.demo.persistence.h2.entity.AddressEntity;
 
 @Getter
 @Setter
@@ -151,28 +209,33 @@ public class EmployeeEntity {
 ```
 
 ##### EmployeeRepository.java
+
 ```java
+
 @Repository
 public interface EmployeeRepository extends JpaRepository<EmployeeEntity, String>, JpaSpecificationExecutor<EmployeeEntity> {
 }
 ```
+
 ##### EmployeeService.java
+
 ```java
+
 @Component
-@Transactional
+//@Transactional
 public class EmployeeService {
     @Autowired
     private EmployeeRepository employeeRepository;
 
-    public  List<Map<String, String>> searchEmployees(Specification<EmployeeEntity> specification) {
+    public List<Map<String, String>> searchEmployees(Specification<EmployeeEntity> specification) {
         List<EmployeeEntity> employees = null;
         if (specification != null) {
-           employees = employeeRepository.findAll(specification);
+            employees = employeeRepository.findAll(specification);
         } else {
             employees = employeeRepository.findAll();
         }
-        List<Map<String,String>> employeesMap = new ArrayList<>();
-        for (EmployeeEntity employeeEntity: employees) {
+        List<Map<String, String>> employeesMap = new ArrayList<>();
+        for (EmployeeEntity employeeEntity : employees) {
             Map<String, String> emp = new HashMap<>();
             emp.put("id", employeeEntity.getId());
             emp.put("firstName", employeeEntity.getFirstName());
@@ -184,14 +247,17 @@ public class EmployeeService {
     }
 }
 ```
+
 ##### EmployeeDataFetcher.java
+
 ```java
+
 @Component
 public class EmployeeDataFetcher {
     @Autowired
     private EmployeeService employeeService;
 
-   public DataFetcher searchEmployees() {
+    public DataFetcher searchEmployees() {
 
         return new DataFetcher() {
             @Override
@@ -208,7 +274,9 @@ public class EmployeeDataFetcher {
         };
     }
 ```
+
 #### Query With Filter
+
 ```
 {
   searchEmployees(filter: {
@@ -226,6 +294,7 @@ public class EmployeeDataFetcher {
 ```
 
 #### Result
+
 ```
 {
   "data": {

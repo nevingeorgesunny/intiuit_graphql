@@ -54,6 +54,8 @@ public class GraphQLProvider {
                 .scalar(ExtendedScalars.DateTime)
                 .type(newTypeWiring("Query")
                         .dataFetcher("searchEmployees", employeeDataFetcher.searchEmployees()))
+                .type(newTypeWiring("Query")
+                        .dataFetcher("searchAccounts", employeeDataFetcher.searchAccounts()))
                 .type(newTypeWiring("Employee")
                         .dataFetcher("address", employeeDataFetcher.getAddresses()))
                 .build();
