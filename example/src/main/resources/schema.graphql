@@ -2,69 +2,47 @@
 scalar Date
 scalar DateTime
 
-type Query {
-   searchEmployees(filter: EmployeeFilter): [Employee!]
-   searchAccounts(filter: AccountsFilter): [Accounts!]
-}
 
-# Define the types
-type Employee {
-   id: ID
-   firstName: String!
-   lastName: String!
-   age: Int!
-   birthDate: DateTime!
-   address (filter: AddressFilter): [Address!]
+type Query {
+   searchAccounts(filter: AccountsFilter): [Accounts!]
 }
 
 type Accounts {
   account_id: String
   id: ID
   someUUID : String
+  someString : String
   limit: String
   products: [String]
+  sampleUserTestCaseSubmissions(filter: SampleUserTestCaseSubmissionsFilter) : SampleUserTestCaseSubmissions
 }
 
-type Address {
-   id: ID
-   street : String!
-   city : String!
-   state : String!
-   zipCode : Int!
+type SampleUserTestCaseSubmissions{
+   stdin : String
+   and: [SampleUserTestCaseSubmissions!]
+   or: [SampleUserTestCaseSubmissions!]
+   not: SampleUserTestCaseSubmissions
 }
+
+input SampleUserTestCaseSubmissionsFilter {
+    stdin: StringExpression
+
+}
+
 
 input AccountsFilter {
    account_id: IntExpression
    limit: IntExpression
-   someUUID : StringExpression
+   someUUID : UUIDExpression
+   someString : StringExpression
 
    and: [AccountsFilter!]
    or: [AccountsFilter!]
    not: AccountsFilter
 }
 
-
-# Define filter input
-input EmployeeFilter {
-   firstName: StringExpression
-   lastName: StringExpression
-   age: IntExpression
-   birthDate: DateTimeExpression
-
-   and: [EmployeeFilter!]
-   or: [EmployeeFilter!]
-   not: EmployeeFilter
-}
-
-input AddressFilter {
-   street : StringExpression
-   city : StringExpression
-   state : StringExpression
-   zipCode : IntExpression
-
-     and: [AddressFilter!]
-     or: [AddressFilter!]
-     not: AddressFilter
+input UUIDExpression {
+    uuidEquals : String
 }
 
 

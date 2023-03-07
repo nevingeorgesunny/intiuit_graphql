@@ -27,6 +27,12 @@ public class ExpressionField implements Expression {
 
     private String fieldName;
 
+    public void setFieldName(String fieldName) {
+        this.fieldName = fieldName;
+    }
+    public String getFieldName() {
+        return fieldName;
+    }
     public ExpressionField(String fieldName) {
         this.fieldName = fieldName;
     }

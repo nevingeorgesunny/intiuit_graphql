@@ -1,7 +1,6 @@
 package com.intuit.graphql.demo.persistence.mongo.repository;
 
 import com.intuit.graphql.demo.persistence.mongo.document.AccountDocument;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 /**

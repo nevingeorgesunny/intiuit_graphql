@@ -94,6 +94,12 @@ class FilterExpressionParser {
                 /* Case to handle the Field expression.*/
                 ExpressionField leftOperand = new ExpressionField(entry.getKey().toString());
                 BinaryExpression binaryExpression = (BinaryExpression) createExpressionTree((Map)entry.getValue());
+                if(binaryExpression.getLeftOperand() != null){
+                    String leftOperandFieldName = leftOperand.getFieldName()
+                            + "." + ((ExpressionField)binaryExpression.getLeftOperand()).getFieldName();
+                    leftOperand.setFieldName(leftOperandFieldName);
+                }
+
                 binaryExpression.setLeftOperand(leftOperand);
                 expression = binaryExpression;
             }

@@ -25,10 +25,8 @@ import com.intuit.graphql.filter.client.FieldValuePair;
 import com.intuit.graphql.filter.client.FieldValueTransformer;
 import org.springframework.data.mongodb.core.query.Criteria;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * This class is responsible for traversing the expression tree and
@@ -38,6 +36,7 @@ import java.util.Map;
  */
 public class MongoCriteriaExpressionVisitor<T> implements ExpressionVisitor<Criteria> {
 
+    private static final Pattern uuidRegex = Pattern.compile("[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}");
     private static final String ANY_CHARACTERS = ".*";
     private static final String START_ANCHOR = "^";
     private static final String END_ANCHOR = "$";
@@ -123,7 +122,12 @@ public class MongoCriteriaExpressionVisitor<T> implements ExpressionVisitor<Crit
                 break;
 
             case EQUALS:
-                criteria = Criteria.where(fieldName).is(operandValue.value());
+                if (operandValue.value() instanceof String
+                        && uuidRegex.matcher(String.valueOf(operandValue.value())).matches()) {
+                    criteria = Criteria.where(fieldName).is(UUID.fromString((String) operandValue.value()));
+                }else{
+                    criteria = Criteria.where(fieldName).is(operandValue.value());
+                }
                 break;
 
             /* Numeric operations.*/
